@@ -1,0 +1,5 @@
+f.head())
+# print(df.shape)
+# print(df.columns)
+# print(df.isnull().sum())
+# print(df["sentiment"].value_counts())
