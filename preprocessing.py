@@ -1,142 +1,154 @@
+
 import pandas as pd
+import nltk
+import re
+import string
 
 from bs4 import BeautifulSoup
-
-df = pd.read_csv("dataset/movies.csv")
-
-
-# check data 
-
-
-# print(df.head())
-# print(df.shape)
-# print(df.columns)
-# print(df.isnull().sum())
-# print(df["sentiment"].value_counts())
-
-# print(df["sentiment"].value_counts())
-
-# df["review_length"] = df["review"].apply(len)
-
-# print(df["review_length"].describe())
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords, wordnet
+from nltk.stem import WordNetLemmatizer
+from nltk import pos_tag
 
 
+# 1. Load dataset
+df = pd.read_csv("dataset/IMDB Dataset.csv")
 
 
-# # check duplicate 
+# 2. Check data
+def check_data(df):
+    print("Shape:", df.shape)
+    print("Columns:", df.columns.tolist())
+    print("\nMissing values:")
+    print(df.isnull().sum())
 
-# # duplicate review 
-# print("Duplicate reviews:", df["review"].duplicated().sum())
+    print("\nSentiment distribution:")
+    print(df["sentiment"].value_counts(dropna=False))
 
-# # duplicate row 
-# print("Duplicate rows:", df.duplicated().sum())
+    print("\nReview length:")
+    print(df["review"].dropna().str.len().describe())
 
-# print(df["review"].str.contains("<br", case=False, regex=False).sum())
-
-# cleaning
-
-df_clean = df.copy()
-df_clean = df_clean.drop_duplicates() 
-# print(df_clean.shape)
-# print("Duplicates:", df_clean.duplicated().sum())
+check_data(df)
 
 
+# 3. Cleaning
+df_clean = df.dropna(
+    subset=["review", "sentiment"]
+).copy()
+
+df_clean = df_clean.drop_duplicates()
 
 
-
-# remove html tag 
 def remove_html(text):
-    return BeautifulSoup(text, "html.parser").get_text()
+    return BeautifulSoup(
+        str(text), "html.parser"
+    ).get_text(" ")
+
 
 df_clean["review"] = df_clean["review"].apply(remove_html)
 
 
-
-# test 
-# print("HTML tags before cleaning:",
-#       df["review"].str.contains("<br", case=False, regex=False).sum())
-
-# print("HTML tags after cleaning:",
-#       df_clean["review"].str.contains("<br", case=False, regex=False).sum())
-
-
-# check data count after cleaning 
-print(df_clean.shape)
-print(df_clean["sentiment"].value_counts())
-
-
-
-# preprocessing 
-
-
-# lowercases 
-
-df_clean["review"] = df_clean["review"].str.lower()
-
-# print(df_clean["review"].head())
-
-
-# punctuation
-
-import string
-
-
-# change it to space 
-def remove_punctuation(text):
-    return text.translate(str.maketrans(string.punctuation, " " * len(string.punctuation)))
-
-
-df_clean["review"] = df_clean["review"].apply(remove_punctuation)
-
-# print(df_clean["review"].iloc[1])
-
-
-# check punctuation after cleaning 
-print("Punctuation after cleaning:",
-      df_clean["review"].apply(
-          lambda x: sum(char in string.punctuation for char in x)
-      ).sum())
-
-# check empty reviews
+# Remove reviews that are empty after HTML removal
 df_clean["review"] = df_clean["review"].str.strip()
 
-empty_reviews = (df_clean["review"] == "").sum()
+df_clean = df_clean[
+    df_clean["review"].ne("")
+].copy()
 
-print("Empty reviews:", empty_reviews)
-print("Missing reviews:", df_clean["review"].isnull().sum())
+
+# 4. Initialize preprocessing tools once
+stop_words = set(stopwords.words("english"))
+stop_words -= {"no", "nor", "not", "never", "neither"}
+
+lemmatizer = WordNetLemmatizer()
 
 
-# remove duplicate again 
+def get_wordnet_pos(tag):
+    if tag.startswith("J"):
+        return wordnet.ADJ
+    elif tag.startswith("V"):
+        return wordnet.VERB
+    elif tag.startswith("R"):
+        return wordnet.ADV
+    return wordnet.NOUN
+
+
+# 5. Normalize contractions before punctuation removal
+def normalize_contractions(text):
+    text = text.lower()
+
+    text = re.sub(r"\bcan't\b", "can not", text)
+    text = re.sub(r"\bwon't\b", "will not", text)
+    text = re.sub(r"\bshan't\b", "shall not", text)
+    text = re.sub(r"n't\b", " not", text)
+
+    return text
+
+
+def remove_punctuation(text):
+    return text.translate(
+        str.maketrans(
+            string.punctuation,
+            " " * len(string.punctuation)
+        )
+    )
+
+
+# 6. Tokenization, POS tagging, stopword removal,
+#    and lemmatization
+def preprocess_tokens(text):
+    text = normalize_contractions(text)
+    text = remove_punctuation(text)
+
+    tokens = word_tokenize(text)
+    tagged_tokens = pos_tag(tokens)
+
+    cleaned_tokens = []
+
+    for word, tag in tagged_tokens:
+        if word in stop_words:
+            continue
+
+        lemma = lemmatizer.lemmatize(
+            word, get_wordnet_pos(tag)
+        )
+
+        cleaned_tokens.append(lemma)
+
+    return cleaned_tokens
+
+
+def preprocess_text(text):
+    return " ".join(preprocess_tokens(text))
+
+
+# 7. Apply preprocessing
+df_clean["review"] = df_clean["review"].apply(
+    preprocess_text
+)
+
+
+# 8. Remove empty processed reviews
+df_clean["review"] = df_clean["review"].str.strip()
+
+df_clean = df_clean[
+    df_clean["review"].ne("")
+].copy()
+
+# Remove duplicates created by text normalization
 df_clean = df_clean.drop_duplicates()
 
 
-# check data 
-print("Shape:", df_clean.shape)
+# 9. Final checks
+check_data(df_clean)
 
-print("\nMissing values:")
-print(df_clean.isnull().sum())
+print("\nEmpty reviews:", df_clean["review"].eq("").sum())
 
-print("\nDuplicates:")
-print(df_clean.duplicated().sum())
+# 10. Save processed dataset
+df_clean.to_csv(
+    "dataset/movies_preprocessed.csv",
+    index=False,
+    encoding="utf-8"
+)
 
-print("\nSentiment:")
-print(df_clean["sentiment"].value_counts())
-
-print("\nEmpty reviews:")
-print((df_clean["review"] == "").sum())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-df_clean.to_csv("dataset/movies_clean.csv", index=False)
+print("\nPreprocessing completed!")
