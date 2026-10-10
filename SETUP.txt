@@ -1,0 +1,495 @@
+================================================================================
+                    🎬 MOVIE REVIEW ANALYZER — SETUP GUIDE
+================================================================================
+
+آخر تحديث: 2025
+المشروع: Movie Review Analyzer (NLP + Machine Learning)
+================================================================================
+
+
+
+================================================================================
+                              1. المتطلبات الأساسية
+================================================================================
+
+- Python 3.10 أو أحدث
+- pip (بيجي مع Python)
+- Git (اختياري - للـ Version Control)
+
+التأكد من الإصدار:
+    python --version
+
+المتوقع:
+    Python 3.13.x
+
+
+
+================================================================================
+                              2. المكتبات المطلوبة
+================================================================================
+
+كل المكتبات في أمر واحد:
+    pip install pandas numpy scikit-learn joblib nltk beautifulsoup4 lxml flask flask-cors tqdm requests
+
+
+شرح كل مكتبة:
+--------------------------------------------------------------------------------
+pandas            → قراءة ومعالجة ملفات CSV
+numpy             → عمليات رياضية على المصفوفات
+scikit-learn      → TF-IDF + Logistic Regression + Metrics
+joblib            → حفظ وتحميل الـ Model
+nltk              → أدوات NLP (Tokenization, Stopwords, Lemmatization)
+beautifulsoup4    → إزالة HTML tags
+lxml              → Parser لـ BeautifulSoup
+flask             → Web Framework للـ Backend
+flask-cors        → Handle CORS للـ Frontend
+tqdm              → Progress Bar (اختياري)
+requests          → HTTP requests للاختبار
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+                              3. تحميل NLTK Data
+================================================================================
+
+أمر واحد لتحميل كل الملفات المطلوبة:
+    python -m nltk.downloader punkt punkt_tab stopwords wordnet omw-1.4 averaged_perceptron_tagger averaged_perceptron_tagger_eng
+
+
+شرح كل Resource:
+--------------------------------------------------------------------------------
+punkt                          → Tokenization (تقسيم النص لجمل)
+punkt_tab                      → Tokenization (نسخة جديدة من NLTK 3.9+)
+stopwords                      → قائمة الكلمات الشائعة
+wordnet                        → قاعدة بيانات للـ Lemmatization
+omw-1.4                        → Open Multilingual WordNet
+averaged_perceptron_tagger     → POS Tagging
+averaged_perceptron_tagger_eng → POS Tagging (إنجليزي، نسخة جديدة)
+--------------------------------------------------------------------------------
+
+⚠️ ملاحظة مهمة:
+في NLTK 3.9+، بعض الملفات بقت مفصولة حسب اللغة.
+لذلك لازم تنزلي كل الملفات دي.
+
+
+
+================================================================================
+                              4. خطوات Preprocessing
+================================================================================
+
+Pipeline الكامل:
+--------------------------------------------------------------------------------
+Raw Text
+    ↓
+1. Remove HTML tags (BeautifulSoup)
+    ↓
+2. Normalize contractions (can't → can not)
+    ↓
+3. Lowercase (كل الحروف صغيرة)
+    ↓
+4. Remove punctuation (علامات الترقيم → مسافات)
+    ↓
+5. Tokenization (word_tokenize)
+    ↓
+6. POS Tagging (pos_tag)
+    ↓
+7. Remove stopwords (مع حماية النفي: not, no, never...)
+    ↓
+8. Lemmatization (POS-based: running → run)
+    ↓
+9. Negation Prefix (not enjoy → not_enjoy) — اختياري
+    ↓
+Clean Text
+--------------------------------------------------------------------------------
+
+
+تفاصيل كل خطوة:
+================================================================================
+
+4.1. Remove HTML
+--------------------------------------------------------------------------------
+الاستخدام: إزالة وسوم HTML زي <br /> من الـ Reviews.
+
+الكود:
+    from bs4 import BeautifulSoup
+    def remove_html(text):
+        return BeautifulSoup(str(text), "html.parser").get_text(" ")
+
+مثال:
+    قبل:  "Great movie!<br /><br />Loved it!"
+    بعد:  "Great movie! Loved it!"
+
+
+4.2. Normalize Contractions
+--------------------------------------------------------------------------------
+الاستخدام: تحويل الاختصارات لكلمات كاملة.
+
+الكود:
+    import re
+    def normalize_contractions(text):
+        text = text.lower()
+        text = re.sub(r"\bcan't\b", "can not", text)
+        text = re.sub(r"\bwon't\b", "will not", text)
+        text = re.sub(r"\bshan't\b", "shall not", text)
+        text = re.sub(r"n't\b", " not", text)
+        return text
+
+مثال:
+    قبل:  "I can't believe it's not better."
+    بعد:  "i can not believe it's not better."
+
+
+4.3. Lowercase
+--------------------------------------------------------------------------------
+الاستخدام: تحويل كل الحروف لصغيرة.
+
+الكود:
+    df["review"] = df["review"].str.lower()
+
+مثال:
+    قبل:  "AMAZING Movie"
+    بعد:  "amazing movie"
+
+
+4.4. Remove Punctuation
+--------------------------------------------------------------------------------
+الاستخدام: تحويل علامات الترقيم لمسافات.
+
+الكود:
+    import string
+    def remove_punctuation(text):
+        return text.translate(
+            str.maketrans(
+                string.punctuation,
+                " " * len(string.punctuation)
+            )
+        )
+
+مثال:
+    قبل:  "Amazing! Great, wonderful."
+    بعد:  "Amazing  Great  wonderful "
+
+
+4.5. Tokenization
+--------------------------------------------------------------------------------
+الاستخدام: تقسيم النص لكلمات.
+
+الكود:
+    from nltk.tokenize import word_tokenize
+    tokens = word_tokenize(text)
+
+مثال:
+    قبل:  "I loved this movie"
+    بعد:  ["I", "loved", "this", "movie"]
+
+
+4.6. POS Tagging
+--------------------------------------------------------------------------------
+الاستخدام: تحديد نوع كل كلمة (اسم، فعل، صفة...).
+
+الكود:
+    from nltk import pos_tag
+    tagged_tokens = pos_tag(tokens)
+
+مثال:
+    قبل:  ["I", "loved", "this", "movie"]
+    بعد:  [("I", "PRP"), ("loved", "VBD"), ("this", "DT"), ("movie", "NN")]
+
+
+4.7. Remove Stopwords (مع حماية النفي)
+--------------------------------------------------------------------------------
+الاستخدام: شيل الكلمات الشائعة مع الحفاظ على كلمات النفي.
+
+الكود:
+    from nltk.corpus import stopwords
+    stop_words = set(stopwords.words("english"))
+    # حماية كلمات النفي (مهم جداً!)
+    stop_words -= {"no", "nor", "not", "never", "neither"}
+
+مثال:
+    قبل:  ["this", "movie", "was", "not", "good"]
+    بعد:  ["movie", "not", "good"]
+    لاحظي: "not" اتحفظت!
+
+
+4.8. Lemmatization (POS-based)
+--------------------------------------------------------------------------------
+الاستخدام: إرجاع كل كلمة لأصلها حسب نوعها.
+
+الكود:
+    from nltk.corpus import wordnet
+    from nltk.stem import WordNetLemmatizer
+
+    lemmatizer = WordNetLemmatizer()
+
+    def get_wordnet_pos(tag):
+        if tag.startswith("J"):
+            return wordnet.ADJ
+        elif tag.startswith("V"):
+            return wordnet.VERB
+        elif tag.startswith("R"):
+            return wordnet.ADV
+        return wordnet.NOUN
+
+    lemma = lemmatizer.lemmatize(word, get_wordnet_pos(tag))
+
+مثال:
+    قبل:  "running", "better", "mice"
+    بعد:  "run", "good", "mouse"
+
+
+4.9. Negation Prefix (اختياري - تحسين)
+--------------------------------------------------------------------------------
+الاستخدام: لزق كلمات النفي بالكلمة اللي بعدها.
+
+الكود:
+    def handle_negation(text):
+        negation_words = {
+            "not", "no", "never", "neither", "nor",
+            "cannot", "cant", "wont", "dont", "didnt",
+            "isnt", "arent", "wasnt", "werent",
+            "hasnt", "havent", "hadnt",
+            "wouldnt", "shouldnt", "couldnt"
+        }
+        tokens = text.split()
+        result = []
+        i = 0
+        while i < len(tokens):
+            word = tokens[i]
+            if word in negation_words and i + 1 < len(tokens):
+                combined = f"{word}_{tokens[i + 1]}"
+                result.append(combined)
+                i += 2
+            else:
+                result.append(word)
+                i += 1
+        return " ".join(result)
+
+مثال:
+    قبل:  "not enjoy"
+    بعد:  "not_enjoy"
+
+
+
+================================================================================
+                              5. خطوات التدريب
+================================================================================
+
+5.1. قراءة الداتا:
+    df = pd.read_csv("dataset/movies_preprocessed.csv")
+
+
+5.2. Label Encoding:
+    df['sentiment_encoded'] = df['sentiment'].map({
+        'positive': 1,
+        'negative': 0
+    })
+
+
+5.3. Train/Test Split:
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y
+    )
+    النسبة: 80% تدريب / 20% اختبار
+
+
+5.4. TF-IDF Vectorization:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    vectorizer = TfidfVectorizer(
+        max_features=20000,
+        ngram_range=(1, 2),
+        min_df=2,
+        max_df=0.95,
+        sublinear_tf=True
+    )
+    X_train_tfidf = vectorizer.fit_transform(X_train)
+    X_test_tfidf = vectorizer.transform(X_test)
+
+    شرح Parameters:
+    ----------------------------------------
+    max_features = 20000    → أشهر 20,000 كلمة
+    ngram_range = (1, 2)    → كلمة + كلمتين مع بعض
+    min_df = 2              → نتجاهل الكلمات اللي ظهرت أقل من مرتين
+    max_df = 0.95           → نتجاهل الكلمات اللي ظهرت في > 95%
+    sublinear_tf = True     → تحسين رياضي
+    ----------------------------------------
+
+
+5.5. Logistic Regression:
+    from sklearn.linear_model import LogisticRegression
+    model = LogisticRegression(
+        max_iter=1000,
+        C=1.0,
+        solver='liblinear',
+        random_state=42
+    )
+    model.fit(X_train_tfidf, y_train)
+
+
+5.6. التقييم:
+    from sklearn.metrics import (
+        accuracy_score, precision_score,
+        recall_score, f1_score
+    )
+    y_pred = model.predict(X_test_tfidf)
+    print(f"Accuracy :  {accuracy_score(y_test, y_pred):.4f}")
+    print(f"Precision:  {precision_score(y_test, y_pred):.4f}")
+    print(f"Recall   :  {recall_score(y_test, y_pred):.4f}")
+    print(f"F1-Score :  {f1_score(y_test, y_pred):.4f}")
+
+
+5.7. حفظ الـ Model:
+    import joblib
+    joblib.dump(model, "model/sentiment_model.pkl")
+    joblib.dump(vectorizer, "model/tfidf_vectorizer.pkl")
+
+
+
+================================================================================
+                              6. تشغيل المشروع
+================================================================================
+
+الخطوات بالترتيب:
+--------------------------------------------------------------------------------
+
+الخطوة 1: تثبيت المكتبات
+    pip install pandas numpy scikit-learn joblib nltk beautifulsoup4 lxml flask flask-cors tqdm requests
+
+الخطوة 2: تحميل NLTK data
+    python -m nltk.downloader punkt punkt_tab stopwords wordnet omw-1.4 averaged_perceptron_tagger averaged_perceptron_tagger_eng
+
+الخطوة 3: تشغيل Preprocessing
+    python preprocessing.py
+
+الخطوة 4: تشغيل التدريب
+    python train_model.py
+
+الخطوة 5: اختبار الـ Model
+    python predict.py
+
+الخطوة 6: تشغيل الـ Backend
+    cd backend
+    python app.py
+
+الخطوة 7: فتح الـ Frontend
+    افتحي frontend/index.html في المتصفح
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+                              7. حل المشاكل الشائعة
+================================================================================
+
+مشكلة 1: LookupError: Resource 'punkt_tab' not found
+--------------------------------------------------------------------------------
+الحل:
+    python -m nltk.downloader punkt_tab
+
+
+مشكلة 2: LookupError: Resource 'averaged_perceptron_tagger_eng' not found
+--------------------------------------------------------------------------------
+الحل:
+    python -m nltk.downloader averaged_perceptron_tagger_eng
+
+
+مشكلة 3: FileNotFoundError: IMDB Dataset.csv
+--------------------------------------------------------------------------------
+السبب: اسم الملف فيه مسافة أو مختلف.
+الحل:
+    - غيّري اسم الملف لـ IMDB_Dataset.csv (بـ underscore)
+    - أو عدلي الكود ليقرأ من الاسم الصح
+
+
+مشكلة 4: pandas.errors.EmptyDataError
+--------------------------------------------------------------------------------
+السبب: الملف فاضي (0 bytes).
+الحل: نزّلي الداتا من Kaggle:
+    https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews
+
+
+مشكلة 5: X has 3000 features, but LogisticRegression is expecting 10000
+--------------------------------------------------------------------------------
+السبب: الـ Vectorizer والـ Model مش متطابقين.
+الحل:
+    1. امسحي model/sentiment_model.pkl و model/tfidf_vectorizer.pkl
+    2. شغلي train_model.py تاني
+
+
+مشكلة 6: CORS Error من الـ Frontend
+--------------------------------------------------------------------------------
+الحل: تأكدي إن في backend/app.py:
+    from flask_cors import CORS
+    CORS(app)
+
+
+مشكلة 7: ModuleNotFoundError: No module named 'flask'
+--------------------------------------------------------------------------------
+الحل:
+    pip install flask flask-cors
+
+
+
+================================================================================
+                              8. ملخص المشروع
+================================================================================
+
+الأدوات المستخدمة:
+--------------------------------------------------------------------------------
+Data Processing    → pandas
+NLP                → NLTK, BeautifulSoup
+ML                 → scikit-learn (TF-IDF + Logistic Regression)
+Model Persistence  → joblib
+Backend            → Flask, flask-cors
+Frontend           → HTML, CSS, JavaScript
+--------------------------------------------------------------------------------
+
+النتايج:
+--------------------------------------------------------------------------------
+Accuracy   → 90.17%
+Precision  → 89.68%
+Recall     → 90.86%
+F1-Score   → 90.27%
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+                              9. الأوامر السريعة
+================================================================================
+
+كل حاجة في أوامر جاهزة للنسخ واللصق:
+--------------------------------------------------------------------------------
+
+# 1. تثبيت المكتبات
+pip install pandas numpy scikit-learn joblib nltk beautifulsoup4 lxml flask flask-cors tqdm requests
+
+# 2. تحميل NLTK Data
+python -m nltk.downloader punkt punkt_tab stopwords wordnet omw-1.4 averaged_perceptron_tagger averaged_perceptron_tagger_eng
+
+# 3. Preprocessing
+python preprocessing.py
+
+# 4. التدريب
+python train_model.py
+
+# 5. الاختبار
+python predict.py
+
+# 6. تشغيل الـ Backend
+cd backend
+python app.py
+
+--------------------------------------------------------------------------------
+
+
+
+================================================================================
+                                  🎬 END
+================================================================================

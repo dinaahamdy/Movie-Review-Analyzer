@@ -10,9 +10,30 @@ from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
 from nltk import pos_tag
 
+# ============================================================
+# Auto-download all required NLTK data
+# ============================================================
+def ensure_nltk_data():
+    """Ensure all NLTK resources are available."""
+    resources = {
+        'tokenizers': ['punkt', 'punkt_tab'],
+        'corpora': ['stopwords', 'wordnet', 'omw-1.4'],
+        'taggers': [
+            'averaged_perceptron_tagger',
+            'averaged_perceptron_tagger_eng'
+        ],
+    }
+    for category, names in resources.items():
+        for name in names:
+            try:
+                nltk.data.find(f'{category}/{name}')
+            except LookupError:
+                print(f"Downloading NLTK resource: {name}")
+                nltk.download(name, quiet=True)
 
+ensure_nltk_data()
 # 1. Load dataset
-df = pd.read_csv("dataset/IMDB Dataset.csv")
+df = pd.read_csv("./dataset/IMDB Dataset.csv")
 
 
 # 2. Check data
@@ -117,10 +138,41 @@ def preprocess_tokens(text):
 
     return cleaned_tokens
 
+def handle_negation(text):
+    """
+    Attach negation words to the following word.
+    Example: "not enjoy" -> "not_enjoy"
+    """
+    negation_words = {
+        "not", "no", "never", "neither", "nor",
+        "cannot", "cant", "wont", "dont", "didnt",
+        "isnt", "arent", "wasnt", "werent",
+        "hasnt", "havent", "hadnt",
+        "wouldnt", "shouldnt", "couldnt"
+    }
+
+    tokens = text.split()
+    result = []
+    i = 0
+
+    while i < len(tokens):
+        word = tokens[i]
+        if word in negation_words and i + 1 < len(tokens):
+            # نلزق كلمة النفي بالكلمة اللي بعدها
+            combined = f"{word}_{tokens[i + 1]}"
+            result.append(combined)
+            i += 2
+        else:
+            result.append(word)
+            i += 1
+
+    return " ".join(result)
 
 def preprocess_text(text):
-    return " ".join(preprocess_tokens(text))
-
+    tokens = preprocess_tokens(text)
+    text = " ".join(tokens)
+    text = handle_negation(text)   # ← ضيفي السطر ده
+    return text
 
 # 7. Apply preprocessing
 df_clean["review"] = df_clean["review"].apply(
