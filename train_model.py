@@ -30,6 +30,46 @@ print(f"Total reviews: {len(df)}")
 
 df = df.dropna(subset=['review', 'sentiment'])
 
+# ============================================================
+# إضافة أمثلة متنوعة لتحسين "not_like" بدون overfitting
+# ============================================================
+synthetic_data = pd.DataFrame({
+    'review': [
+        # جمل متنوعة
+        'not_like movie',
+        'not_like act',
+        'not_like plot',
+        'not_like film',
+        'not_like end',
+        'not_like stori',
+        'not_like direct',
+        'not_like charact',
+        'not_like scene',
+        'not_like dialog',
+        'not_like music',
+        'not_like pace',
+        'not_like humor',
+        'not_like twist',
+        'not_like cinematographi',
+        'not_like perform',
+        'not_like script',
+        'not_like cast',
+        'not_like visual',
+        'not_like effect',
+        'not_like soundtrack',
+        'not_like screenwrit',
+        'not_like product',
+        'not_like edit',
+        'not_like pac',
+    ] * 50,   # ← 50 بدل 2000
+    'sentiment': ['negative'] * 1250
+})
+
+print(f"Synthetic reviews: {len(synthetic_data)}")
+df = pd.concat([df, synthetic_data], ignore_index=True)
+
+
+print(f"After adding synthetic data: {len(df)}")
 # Encode
 df['sentiment_encoded'] = df['sentiment'].map({'positive': 1, 'negative': 0})
 df = df.dropna(subset=['sentiment_encoded'])
@@ -77,10 +117,12 @@ print(f"Test matrix:  {X_test_tfidf.shape}")
 # 6. Train
 # ============================================================
 print("\nTraining Logistic Regression...")
-model = LogisticRegression(
-    max_iter=1000, C=1.0,
-    solver='liblinear', random_state=42
-)
+from sklearn.svm import LinearSVC
+from sklearn.calibration import CalibratedClassifierCV
+
+svm = LinearSVC(C=1.0, max_iter=5000, random_state=42)
+model = CalibratedClassifierCV(svm, cv=3)
+model.fit(X_train_tfidf, y_train)
 model.fit(X_train_tfidf, y_train)
 print("Done!")
 
