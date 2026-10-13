@@ -1,0 +1,7 @@
+.movies-page { padding: 2rem 5%; }
+.page-header { text-align: center; margin-bottom: 2rem; }
+.page-header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.controls-bar { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem; background: var(--cream); padding: 1rem; border-radius: 8px; border: 1px solid var(--muted-gold); }
+.controls-bar input, .controls-bar select { padding: 0.6rem; border: 1px solid var(--soft-beige); border-radius: 4px; font-family: var(--font-body); font-size: 1rem; }
+.controls-bar input { flex-grow: 1; max-width: 300px; }
+.empty-state { text-align: center; padding: 4rem 2rem; color: var(--soft-brown); }

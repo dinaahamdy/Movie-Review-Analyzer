@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieMind - Magical Movie Discovery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo"><span>✨</span> MovieMind</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="movies.html">Explore Movies</a></li>
+                <li><a href="write-review.html">Write a Review</a></li>
+                <li><a href="sentiment.html">Sentiment Insights</a></li>
+                <li><a href="about-nlp.html">About NLP</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content floating-element">
+                <h1>Every Movie Holds a Thousand Emotions.</h1>
+                <p>Step into a magical cinematic library where stories come alive through the voices, feelings, and perspectives of movie lovers.</p>
+                <div class="hero-btns">
+                    <a href="movies.html" class="btn">Explore the Collection</a>
+                    <a href="write-review.html" class="btn btn-outline">Write a Review</a>
+                </div>
+            </div>
+            <div class="sparkles"></div>
+        </section>
+
+        <section class="featured-section">
+            <h2 class="section-title">Enchanted Collection</h2>
+            <div class="movie-grid" id="featured-movies">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <section class="genres-section">
+            <h2 class="section-title">Discover by Realm</h2>
+            <div class="genre-cards">
+                <a href="movies.html?genre=Fantasy" class="genre-card">Fantasy</a>
+                <a href="movies.html?genre=Adventure" class="genre-card">Adventure</a>
+                <a href="movies.html?genre=Drama" class="genre-card">Drama</a>
+                <a href="movies.html?genre=Science Fiction" class="genre-card">Science Fiction</a>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2>Your Voice Belongs in Every Story.</h2>
+            <a href="write-review.html" class="btn">Add Your Review to the Archive</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 MovieMind. An educational NLP frontend project.</p>
+        <div class="footer-links">
+            <a href="about.html">About Project</a> | <a href="about-nlp.html">NLP Concept</a>
+        </div>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/main.js"></script>
+   <script>
+        // Load all movies dynamically on homepage
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('featured-movies');
+            
+            // استخدمنا movies بالكامل بدلاً من movies.slice
+            const allMovies = movies; 
+            
+            allMovies.forEach(movie => {
+                const stats = getMovieStats(movie.id);
+                container.innerHTML += `
+                    <div class="movie-card">
+                        <img src="${movie.poster}" alt="${movie.title}">
+                        <div class="movie-card-info">
+                            <h3>${movie.title}</h3>
+                            <div class="meta-tags"><span>${movie.year}</span> <span class="genre-tag">${movie.genres[0]}</span></div>
+                            <div class="stats">
+                                <span>★ ${stats.averageRating} (${stats.count} reviews)</span>
+                                <a href="movie-details.html?id=${movie.id}" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">View</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>

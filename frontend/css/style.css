@@ -1,0 +1,85 @@
+/* Core Variables & Magical Theme Palette */
+:root {
+    --warm-ivory: #FFF9F1;
+    --cream: #F7EBDD;
+    --soft-beige: #E9DCCB;
+    --dusty-lavender: #D9C9E8;
+    --pale-mauve: #C7B3D8;
+    --dusty-rose: #D9AEB5;
+    --muted-gold: #C5A46D;
+    --deep-plum: #44334F;
+    --soft-brown: #76675F;
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Lora', serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background-color: var(--warm-ivory);
+    color: var(--deep-plum);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    background-image: radial-gradient(circle at 10% 20%, rgba(217, 201, 232, 0.15) 0%, transparent 40%),
+                      radial-gradient(circle at 90% 80%, rgba(197, 164, 109, 0.1) 0%, transparent 40%);
+}
+
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: normal; }
+
+/* Global Navigation */
+header {
+    background: rgba(247, 235, 221, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--muted-gold);
+    position: sticky;
+    top: 0; z-index: 1000;
+}
+nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; }
+.logo { font-family: var(--font-heading); font-size: 1.8rem; color: var(--deep-plum); text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px;}
+.logo span { color: var(--muted-gold); }
+nav ul { list-style: none; display: flex; gap: 2rem; }
+nav ul li a { text-decoration: none; color: var(--soft-brown); transition: color 0.3s; font-size: 1.1rem; }
+nav ul li a:hover, nav ul li a.active { color: var(--muted-gold); }
+.mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; color: var(--deep-plum); cursor: pointer; }
+
+/* Buttons */
+.btn {
+    display: inline-block; padding: 0.8rem 1.5rem; background: var(--muted-gold);
+    color: var(--warm-ivory); text-decoration: none; font-family: var(--font-heading);
+    border-radius: 4px; border: none; cursor: pointer; transition: background 0.3s, transform 0.2s;
+}
+.btn:hover { background: var(--deep-plum); transform: translateY(-2px); }
+.btn-outline { background: transparent; border: 1px solid var(--muted-gold); color: var(--muted-gold); }
+.btn-outline:hover { background: var(--muted-gold); color: var(--warm-ivory); }
+
+/* Movie Cards */
+.movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem; padding: 2rem 5%; }
+.movie-card {
+    background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(68, 51, 79, 0.08);
+    transition: transform 0.3s, box-shadow 0.3s; border: 1px solid var(--soft-beige); display: flex; flex-direction: column;
+}
+.movie-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(197, 164, 109, 0.3); }
+.movie-card img { width: 100%; height: 350px; object-fit: cover; }
+.movie-card-info { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; }
+.movie-card-info h3 { font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--deep-plum); }
+.meta-tags { display: flex; gap: 10px; font-size: 0.9rem; color: var(--soft-brown); margin-bottom: 1rem; flex-wrap: wrap; }
+.genre-tag { background: var(--dusty-lavender); color: var(--deep-plum); padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; }
+.stats { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--soft-beige); display: flex; justify-content: space-between; align-items: center; }
+
+/* Stars */
+.star { color: #ccc; font-size: 1.2rem; }
+.star.filled { color: var(--muted-gold); }
+
+/* Footer */
+footer { text-align: center; padding: 2rem; background: var(--cream); border-top: 1px solid var(--muted-gold); margin-top: 4rem; color: var(--soft-brown); }
+
+/* Responsive */
+@media (max-width: 768px) {
+    nav ul { display: none; flex-direction: column; width: 100%; position: absolute; top: 100%; left: 0; background: var(--cream); padding: 1rem; text-align: center; }
+    nav ul.show-mobile { display: flex; }
+    .mobile-menu-btn { display: block; }
+}
+
+/* Animations */
+@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+.floating-element { animation: float 4s ease-in-out infinite; }

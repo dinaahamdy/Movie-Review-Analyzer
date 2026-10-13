@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Insights - MovieMind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .dashboard { padding: 2rem 5%; max-width: 1200px; margin: 0 auto; }
+        .stats-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .stat-card { background: #fff; padding: 1.5rem; border-radius: 8px; text-align: center; border: 1px solid var(--soft-beige); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .stat-card h3 { font-family: var(--font-body); font-size: 1rem; color: var(--soft-brown); margin-bottom: 0.5rem; }
+        .stat-card .val { font-size: 2.5rem; font-family: var(--font-heading); color: var(--deep-plum); }
+        
+        .charts-container { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; margin-bottom: 3rem; }
+        .chart-box { background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--soft-beige); }
+        @media (max-width: 768px) { .charts-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header><nav><!-- Loaded by main.js in full app --></nav></header>
+
+    <main class="dashboard">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h1>NLP Sentiment Insights</h1>
+            <p>Visualizing emotions captured in our magical library.</p>
+        </div>
+
+        <div id="dashboardContent">
+            <!-- Stats -->
+            <div class="stats-cards">
+                <div class="stat-card"><h3>Total Reviews</h3><div class="val" id="totalVal">0</div></div>
+                <div class="stat-card" style="border-bottom: 4px solid #28a745;"><h3>Positive</h3><div class="val" id="posVal">0</div></div>
+                <div class="stat-card" style="border-bottom: 4px solid #6c757d;"><h3>Neutral</h3><div class="val" id="neuVal">0</div></div>
+                <div class="stat-card" style="border-bottom: 4px solid #dc3545;"><h3>Negative</h3><div class="val" id="negVal">0</div></div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-container">
+                <div class="chart-box">
+                    <h3 style="text-align:center; margin-bottom:1rem;">Overall Sentiment</h3>
+                    <canvas id="doughnutChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3 style="text-align:center; margin-bottom:1rem;">Sentiment by Movie</h3>
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer><p>&copy; 2026 MovieMind.</p></footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/sentiment-dashboard.js"></script>
+</body>
+</html>

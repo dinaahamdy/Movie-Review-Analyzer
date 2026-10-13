@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About NLP - MovieMind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .info-page { max-width: 800px; margin: 3rem auto; background: #fff; padding: 3rem; border-radius: 12px; border: 1px solid var(--soft-beige); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .info-page h1, .info-page h2 { color: var(--deep-plum); margin-top: 2rem; margin-bottom: 1rem; }
+        .info-page h1 { font-size: 2.5rem; text-align: center; margin-top: 0; }
+        .info-page p, .info-page ul { margin-bottom: 1.5rem; color: var(--soft-brown); font-size: 1.1rem; }
+        .info-page ul { padding-left: 2rem; }
+        .workflow { display: flex; align-items: center; justify-content: space-between; background: var(--cream); padding: 1.5rem; border-radius: 8px; flex-wrap: wrap; text-align: center; font-weight: bold; margin: 2rem 0; }
+        .arrow { color: var(--muted-gold); font-size: 1.5rem; }
+    </style>
+</head>
+<body>
+    <header><nav><!-- Standard Global Nav --></nav></header>
+
+    <main class="info-page">
+        <h1>Understanding Natural Language Processing</h1>
+        <p>Welcome to the educational core of MovieMind! This project demonstrates how machines attempt to understand human emotion through text.</p>
+        
+        <h2>What is NLP?</h2>
+        <p>Natural Language Processing (NLP) is a branch of artificial intelligence that gives computers the ability to read, understand, and derive meaning from human languages.</p>
+
+        <h2>What is Sentiment Analysis?</h2>
+        <p>Sentiment Analysis is an NLP technique used to determine whether data (like a movie review) is positive, negative, or neutral. In a real-world scenario, this is often done using complex Machine Learning models trained on thousands of texts.</p>
+
+        <h2>How MovieMind Works (The Baseline)</h2>
+        <p>For this academic frontend project, we implemented a <strong>Lexicon-based Baseline Classifier</strong> in Vanilla JavaScript. It uses predefined lists of positive and negative words and performs a basic mathematical calculation on the review text.</p>
+        
+        <div class="workflow">
+            <div>User Review<br><span style="font-size:0.8rem;font-weight:normal;">"Beautiful story"</span></div>
+            <div class="arrow">→</div>
+            <div>Text Processing<br><span style="font-size:0.8rem;font-weight:normal;">Tokenization & Negation check</span></div>
+            <div class="arrow">→</div>
+            <div>Classification<br><span style="font-size:0.8rem;font-weight:normal;">Pos: 1, Neg: 0</span></div>
+            <div class="arrow">→</div>
+            <div style="color:#28a745;">Positive</div>
+        </div>
+
+        <h2>Limitations of our Baseline</h2>
+        <p>While functional, a simple word-matching approach has major limitations compared to deep-learning models:</p>
+        <ul>
+            <li><strong>Sarcasm:</strong> "Oh great, another terrible movie." The word "great" might trick the classifier into registering positive sentiment.</li>
+            <li><strong>Context:</strong> "The villain was horribly evil." (A compliment to the acting, but uses a negative word).</li>
+            <li><strong>Nuance:</strong> Complex mixed opinions can confuse a basic word-counter, often resulting in a "Neutral" score.</li>
+        </ul>
+    </main>
+    <footer><p>&copy; 2026 MovieMind.</p></footer>
+    <script src="js/main.js"></script>
+    <script>
+        document.querySelector('nav').innerHTML = `
+        <a href="index.html" class="logo"><span>✨</span> MovieMind</a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="movies.html">Explore Movies</a></li>
+            <li><a href="write-review.html">Write a Review</a></li>
+            <li><a href="sentiment.html">Sentiment Insights</a></li>
+            <li><a href="about-nlp.html" class="active">About NLP</a></li>
+        </ul>`;
+    </script>
+</body>
+</html>

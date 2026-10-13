@@ -1,0 +1,15 @@
+.details-page { padding: 2rem 5%; max-width: 1200px; margin: 0 auto; }
+.movie-header { display: flex; gap: 2rem; background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 2rem; border: 1px solid var(--soft-beige); }
+.movie-poster { width: 300px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.movie-info h1 { font-size: 2.5rem; color: var(--deep-plum); margin-bottom: 0.5rem; }
+.synopsis { font-size: 1.1rem; margin: 1rem 0; color: var(--soft-brown); font-style: italic; }
+.sentiment-summary { margin-top: 1.5rem; padding: 1rem; background: var(--cream); border-radius: 8px; border-left: 4px solid var(--muted-gold); }
+.sentiment-bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; margin-top: 10px; }
+.reviews-section { margin-top: 3rem; }
+.review-card { background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--soft-beige); margin-bottom: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+.review-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+.sentiment-badge { padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+.sentiment-Positive { background: #d4edda; color: #155724; }
+.sentiment-Neutral { background: #e2e3e5; color: #383d41; }
+.sentiment-Negative { background: #f8d7da; color: #721c24; }
+@media (max-width: 768px) { .movie-header { flex-direction: column; } .movie-poster { width: 100%; } }

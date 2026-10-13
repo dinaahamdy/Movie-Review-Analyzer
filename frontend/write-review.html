@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write a Review - MovieMind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .review-form-container { max-width: 600px; margin: 3rem auto; background: #fff; padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--soft-beige); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: var(--deep-plum); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; border: 1px solid var(--soft-beige); border-radius: 4px; font-family: var(--font-body); font-size: 1rem; }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+        .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 5px; font-size: 2rem; cursor: pointer; }
+        .star-rating input { display: none; }
+        .star-rating label { color: #ccc; transition: color 0.2s; }
+        .star-rating input:checked ~ label, .star-rating label:hover, .star-rating label:hover ~ label { color: var(--muted-gold); }
+        .success-message { display: none; background: #d4edda; color: #155724; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <header><nav><!-- Loaded by main.js in full app --></nav></header>
+
+    <main class="review-page">
+        <div class="review-form-container">
+            <h1 style="text-align:center; margin-bottom:1.5rem;">Contribute to the Archive</h1>
+            
+            <div id="successMessage" class="success-message">
+                Review successfully archived! Our NLP classifier has analyzed your sentiment.
+                <br><br><a href="#" id="viewReviewBtn" class="btn btn-outline" style="font-size:0.9rem;">View Review on Movie Page</a>
+            </div>
+
+            <form id="reviewForm">
+                <div class="form-group">
+                    <label for="movieSelect">Select a Magical Tale *</label>
+                    <select id="movieSelect" required>
+                        <option value="">-- Choose a Movie --</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reviewerName">Your Name (Optional)</label>
+                    <input type="text" id="reviewerName" placeholder="e.g. Luna Lovegood">
+                </div>
+
+                <div class="form-group">
+                    <label>Rating (Optional)</label>
+                    <div class="star-rating">
+                        <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                        <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                        <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                        <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                        <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reviewText">Your Review *</label>
+                    <textarea id="reviewText" required placeholder="What emotions did this story evoke? (Try using words like 'amazing', 'beautiful', 'boring', or 'terrible' to test the NLP classifier!)"></textarea>
+                </div>
+
+                <button type="submit" class="btn" style="width:100%;">Submit Review to Archive</button>
+            </form>
+        </div>
+    </main>
+    <footer><p>&copy; 2026 MovieMind.</p></footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/sentiment.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/reviews.js"></script>
+</body>
+</html>

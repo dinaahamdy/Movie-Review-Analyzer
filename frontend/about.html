@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - MovieMind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header><nav><!-- Standard Global Nav --></nav></header>
+    <main class="info-page" style="max-width: 800px; margin: 3rem auto; background: #fff; padding: 3rem; border-radius: 12px; border: 1px solid var(--soft-beige);">
+        <h1 style="font-size:2.5rem; text-align:center;">About MovieMind</h1>
+        <p style="font-size:1.1rem; color:var(--soft-brown); margin-top:2rem;">MovieMind is an academic frontend project designed to bridge the gap between elegant UI/UX design and foundational data science concepts.</p>
+        <h2 style="color:var(--deep-plum); margin-top:1.5rem;">The Architecture</h2>
+        <p style="font-size:1.1rem; color:var(--soft-brown);">This platform is built strictly using HTML5, CSS3, and Vanilla JavaScript. No backend servers, databases, or UI frameworks (like React or Tailwind) were utilized. Data persistence is achieved locally via the browser's `localStorage`.</p>
+        <h2 style="color:var(--deep-plum); margin-top:1.5rem;">Project Goals</h2>
+        <ul style="font-size:1.1rem; color:var(--soft-brown); padding-left:2rem;">
+            <li>Demonstrate proficiency in Vanilla JS DOM manipulation.</li>
+            <li>Create a cohesive, immersive "Magical Library" design system.</li>
+            <li>Integrate an interactive, educational NLP concept purely on the client side.</li>
+        </ul>
+    </main>
+    <footer><p>&copy; 2026 MovieMind.</p></footer>
+    <script src="js/main.js"></script>
+    <script>
+        document.querySelector('nav').innerHTML = `
+        <a href="index.html" class="logo"><span>✨</span> MovieMind</a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="movies.html">Explore Movies</a></li>
+            <li><a href="write-review.html">Write a Review</a></li>
+            <li><a href="sentiment.html">Sentiment Insights</a></li>
+            <li><a href="about-nlp.html">About NLP</a></li>
+        </ul>`;
+    </script>
+</body>
+</html>
