@@ -1,7 +1,197 @@
-.movies-page { padding: 2rem 5%; }
-.page-header { text-align: center; margin-bottom: 2rem; }
-.page-header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-.controls-bar { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem; background: var(--cream); padding: 1rem; border-radius: 8px; border: 1px solid var(--muted-gold); }
-.controls-bar input, .controls-bar select { padding: 0.6rem; border: 1px solid var(--soft-beige); border-radius: 4px; font-family: var(--font-body); font-size: 1rem; }
-.controls-bar input { flex-grow: 1; max-width: 300px; }
-.empty-state { text-align: center; padding: 4rem 2rem; color: var(--soft-brown); }
+
+/* =========================
+   Movies Page
+========================= */
+
+.movies-page {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: clamp(1rem, 3vw, 2rem) 5%;
+    box-sizing: border-box;
+}
+
+/* =========================
+   Page Header
+========================= */
+
+.page-header {
+    text-align: center;
+    margin-bottom: clamp(1.5rem, 4vw, 2rem);
+    overflow-wrap: anywhere;
+}
+
+.page-header h1 {
+    font-size: clamp(1.7rem, 4vw, 2.5rem);
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+    color: var(--deep-plum);
+}
+
+.page-header p {
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    line-height: 1.7;
+    color: var(--soft-brown);
+}
+
+/* =========================
+   Search & Filter Controls
+========================= */
+
+.controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    margin-bottom: 2rem;
+    padding: clamp(0.85rem, 2vw, 1rem);
+
+    background: var(--cream);
+    border-radius: 8px;
+    border: 1px solid var(--muted-gold);
+    box-sizing: border-box;
+}
+
+.controls-bar input,
+.controls-bar select {
+    min-width: 0;
+    max-width: 100%;
+    padding: 0.75rem 0.85rem;
+
+    border: 1px solid var(--soft-beige);
+    border-radius: 6px;
+    background: #fff;
+
+    font-family: var(--font-body);
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.controls-bar input {
+    flex: 1 1 220px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.controls-bar select {
+    flex: 0 1 200px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.controls-bar input:focus,
+.controls-bar select:focus {
+    outline: 2px solid var(--muted-gold);
+    outline-offset: 2px;
+}
+
+/* =========================
+   Empty State
+========================= */
+
+.empty-state {
+    text-align: center;
+    padding: clamp(2rem, 6vw, 4rem)
+             clamp(1rem, 4vw, 2rem);
+
+    color: var(--soft-brown);
+    overflow-wrap: anywhere;
+}
+
+.empty-state h2 {
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    color: var(--deep-plum);
+}
+
+.empty-state p {
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+/* =========================
+   Tablets
+========================= */
+
+@media (max-width: 768px) {
+    .movies-page {
+        padding: 1.5rem 4%;
+    }
+
+    .controls-bar {
+        gap: 0.75rem;
+    }
+
+    .controls-bar input {
+        flex: 1 1 100%;
+        max-width: none;
+    }
+
+    .controls-bar select {
+        flex: 1 1 180px;
+    }
+}
+
+/* =========================
+   Mobile Phones
+========================= */
+
+@media (max-width: 480px) {
+    .movies-page {
+        padding: 1rem;
+    }
+
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.7rem;
+    }
+
+    .controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .controls-bar input,
+    .controls-bar select {
+        width: 100%;
+        max-width: none;
+        flex: 1 1 auto;
+        font-size: 16px;
+        padding: 0.8rem;
+    }
+
+    .empty-state {
+        padding: 2.5rem 1rem;
+    }
+}
+
+/* =========================
+   Very Small Screens
+========================= */
+
+@media (max-width: 320px) {
+    .movies-page {
+        padding: 0.75rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.45rem;
+    }
+
+    .controls-bar {
+        padding: 0.75rem;
+    }
+
+    .empty-state {
+        padding: 2rem 0.5rem;
+    }
+}

@@ -1,17 +1,233 @@
+
+/* Hero Section */
 .hero {
-    height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center;
-    background: linear-gradient(rgba(247, 235, 221, 0.7), rgba(217, 201, 232, 0.7)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1600&q=80') center/cover;
-    position: relative; overflow: hidden;
+    min-height: 70vh;
+    min-height: 70svh;
+    padding: clamp(2rem, 5vw, 4rem) 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    background:
+        linear-gradient(
+            rgba(247, 235, 221, 0.7),
+            rgba(217, 201, 232, 0.7)
+        ),
+        url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1600&q=80')
+        center / cover no-repeat;
+
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
 }
-.hero-content { background: rgba(255, 249, 241, 0.9); padding: 3rem; border-radius: 12px; border: 2px solid var(--muted-gold); max-width: 700px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 2; }
-.hero h1 { font-size: 2.8rem; color: var(--deep-plum); margin-bottom: 1rem; }
-.hero-btns { margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; }
-.section-title { text-align: center; font-size: 2.2rem; margin: 4rem 0 2rem; color: var(--deep-plum); }
-.genre-cards { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; padding: 0 5%; margin-bottom: 4rem; }
+
+/* Hero Content */
+.hero-content {
+    width: 100%;
+    max-width: 700px;
+    box-sizing: border-box;
+
+    background: rgba(255, 249, 241, 0.9);
+    padding: clamp(1.25rem, 4vw, 3rem);
+    border-radius: 12px;
+    border: 2px solid var(--muted-gold);
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    overflow-wrap: break-word;
+}
+
+.hero h1 {
+    font-size: clamp(1.7rem, 4vw, 2.8rem);
+    line-height: 1.3;
+    color: var(--deep-plum);
+    margin-bottom: 1rem;
+}
+
+.hero-content p {
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    line-height: 1.8;
+}
+
+/* Hero Buttons */
+.hero-btns {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-btns a,
+.hero-btns button {
+    max-width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* Section Titles */
+.section-title {
+    text-align: center;
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    line-height: 1.35;
+    margin: clamp(2.5rem, 6vw, 4rem) 1rem 2rem;
+    color: var(--deep-plum);
+}
+
+/* Genre Cards */
+.genre-cards {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+
+    padding: 0 clamp(1rem, 5vw, 5%);
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+    box-sizing: border-box;
+}
+
 .genre-card {
-    background: var(--pale-mauve); color: var(--deep-plum); padding: 1.5rem 2rem; border-radius: 8px; text-decoration: none; font-family: var(--font-heading);
-    font-size: 1.2rem; transition: all 0.3s; border: 1px solid var(--dusty-lavender); box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    flex: 0 1 auto;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    background: var(--pale-mauve);
+    color: var(--deep-plum);
+    padding: clamp(1rem, 2.5vw, 1.5rem)
+             clamp(1.25rem, 3vw, 2rem);
+
+    border-radius: 8px;
+    text-decoration: none;
+    font-family: var(--font-heading);
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    text-align: center;
+
+    border: 1px solid var(--dusty-lavender);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
 }
-.genre-card:hover { background: var(--muted-gold); color: white; transform: translateY(-3px); }
-.cta-section { background: var(--dusty-rose); padding: 4rem 2rem; text-align: center; color: var(--deep-plum); }
-.cta-section h2 { margin-bottom: 1.5rem; font-size: 2rem; }
+
+@media (hover: hover) {
+    .genre-card:hover {
+        background: var(--muted-gold);
+        color: white;
+        transform: translateY(-3px);
+    }
+}
+
+/* Call To Action */
+.cta-section {
+    background: var(--dusty-rose);
+    padding: clamp(2.5rem, 6vw, 4rem)
+             clamp(1rem, 4vw, 2rem);
+    text-align: center;
+    color: var(--deep-plum);
+    box-sizing: border-box;
+}
+
+.cta-section h2 {
+    margin-bottom: 1.5rem;
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    line-height: 1.4;
+}
+
+.cta-section p {
+    line-height: 1.8;
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+    .hero {
+        min-height: 60svh;
+    }
+
+    .hero-content {
+        max-width: 600px;
+    }
+
+    .hero-btns {
+        gap: 0.75rem;
+    }
+
+    .genre-cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .genre-card {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+/* Mobile Phones */
+@media (max-width: 480px) {
+    .hero {
+        min-height: auto;
+        padding: 3rem 1rem;
+        background-position: center;
+    }
+
+    .hero-content {
+        padding: 1.25rem;
+        border-radius: 10px;
+    }
+
+    .hero h1 {
+        font-size: 1.65rem;
+        line-height: 1.35;
+    }
+
+    .hero-content p {
+        font-size: 0.95rem;
+    }
+
+    .hero-btns {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+
+    .hero-btns a,
+    .hero-btns button {
+        width: 100%;
+    }
+
+    .section-title {
+        margin-top: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .genre-cards {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        padding: 0 1rem;
+    }
+
+    .genre-card {
+        padding: 1rem;
+    }
+
+    .cta-section {
+        padding: 2.5rem 1rem;
+    }
+}
+
+/* Very Small Screens */
+@media (max-width: 320px) {
+    .hero-content {
+        padding: 1rem;
+    }
+
+    .hero h1 {
+        font-size: 1.4rem;
+    }
+
+    .hero-btns {
+        gap: 0.5rem;
+    }
+}
