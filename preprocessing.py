@@ -139,10 +139,6 @@ def preprocess_tokens(text):
     return cleaned_tokens
 
 def handle_negation(text):
-    """
-    Attach negation words to the following word.
-    Example: "not enjoy" -> "not_enjoy"
-    """
     negation_words = {
         "not", "no", "never", "neither", "nor",
         "cannot", "cant", "wont", "dont", "didnt",
@@ -152,15 +148,28 @@ def handle_negation(text):
     }
 
     tokens = text.split()
+    
+    # بنحدد نوع كل كلمة (POS Tagging)
+    tagged_tokens = pos_tag(tokens)
+    
     result = []
     i = 0
 
-    while i < len(tokens):
-        word = tokens[i]
-        if word in negation_words and i + 1 < len(tokens):
-            # نلزق كلمة النفي بالكلمة اللي بعدها
-            combined = f"{word}_{tokens[i + 1]}"
-            result.append(combined)
+    while i < len(tagged_tokens):
+        word, tag = tagged_tokens[i]
+        
+        if word in negation_words and i + 1 < len(tagged_tokens):
+            next_word, next_tag = tagged_tokens[i + 1]
+            
+            # لو الكلمة اللي بعد النفي هي صفة (JJ) أو فعل (VB) أو ظرف (RB)
+            # زي: not + favorite (JJ) أو not + love (VB)
+            if next_tag.startswith('J') or next_tag.startswith('V') or next_tag.startswith('R'):
+                # نلزقهم ببعض عشان الموديل يقراها ككلمة واحدة معناها سلبي
+                result.append(f"not_{next_word}") 
+            else:
+                # لو اسم، بنسيب النفي لوحده
+                result.append(word)
+                result.append(next_word)
             i += 2
         else:
             result.append(word)

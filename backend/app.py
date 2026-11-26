@@ -1,8 +1,8 @@
 import os
 import re
 import string
-
 import joblib
+import numpy as np
 import nltk
 from bs4 import BeautifulSoup
 from flask import Flask, request, jsonify
@@ -11,10 +11,10 @@ from nltk import pos_tag
 from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
-
+from gensim.models import FastText
 
 # ============================================================
-# 1. NLTK data (auto-download if missing)
+# 1. NLTK data
 # ============================================================
 def ensure_nltk_data():
     resources = {
@@ -29,9 +29,7 @@ def ensure_nltk_data():
             except LookupError:
                 nltk.download(name, quiet=True)
 
-
 ensure_nltk_data()
-
 
 # ============================================================
 # 2. Flask app
@@ -39,45 +37,35 @@ ensure_nltk_data()
 app = Flask(__name__)
 CORS(app)
 
-
 # ============================================================
-# 3. Load model + vectorizer  (project_root/model/)
+# 3. Load models (FastText + SVM)
 # ============================================================
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)
 
 model_path = os.path.join(project_root, 'model', 'sentiment_model.pkl')
-vectorizer_path = os.path.join(project_root, 'model', 'tfidf_vectorizer.pkl')
+fasttext_path = os.path.join(project_root, 'model', 'fasttext_model.model')
 
-print("Loading model and vectorizer...")
+print("Loading FastText and SVM model...")
 model = joblib.load(model_path)
-vectorizer = joblib.load(vectorizer_path)
-print("Model loaded successfully!")
-
+fasttext_model = FastText.load(fasttext_path)
+print("Models loaded successfully!")
 
 # ============================================================
-# 4. Text cleaning — IDENTICAL to preprocessing.py / predict.py
-#    (the model was trained on text cleaned this exact way)
+# 4. Text cleaning — IDENTICAL to preprocessing.py
 # ============================================================
 stop_words = set(stopwords.words("english"))
 stop_words -= {"no", "nor", "not", "never", "neither"}
-
 lemmatizer = WordNetLemmatizer()
 
-
 def get_wordnet_pos(tag):
-    if tag.startswith("J"):
-        return wordnet.ADJ
-    elif tag.startswith("V"):
-        return wordnet.VERB
-    elif tag.startswith("R"):
-        return wordnet.ADV
+    if tag.startswith("J"): return wordnet.ADJ
+    elif tag.startswith("V"): return wordnet.VERB
+    elif tag.startswith("R"): return wordnet.ADV
     return wordnet.NOUN
-
 
 def remove_html(text):
     return BeautifulSoup(str(text), "html.parser").get_text(" ")
-
 
 def normalize_contractions(text):
     text = text.lower()
@@ -87,86 +75,81 @@ def normalize_contractions(text):
     text = re.sub(r"n't\b", " not", text)
     return text
 
-
 def remove_punctuation(text):
-    return text.translate(
-        str.maketrans(string.punctuation, " " * len(string.punctuation))
-    )
-
-
-NEGATION_WORDS = {
-    "not", "no", "never", "neither", "nor",
-    "cannot", "cant", "wont", "dont", "didnt",
-    "isnt", "arent", "wasnt", "werent",
-    "hasnt", "havent", "hadnt",
-    "wouldnt", "shouldnt", "couldnt"
-}
-
-
+    return text.translate(str.maketrans(string.punctuation, " " * len(string.punctuation)))
 def handle_negation(text):
-    """'not enjoy' -> 'not_enjoy'"""
+    negation_words = {
+        "not", "no", "never", "neither", "nor",
+        "cannot", "cant", "wont", "dont", "didnt",
+        "isnt", "arent", "wasnt", "werent",
+        "hasnt", "havent", "hadnt",
+        "wouldnt", "shouldnt", "couldnt"
+    }
+
     tokens = text.split()
+    
+    # بنحدد نوع كل كلمة (POS Tagging)
+    tagged_tokens = pos_tag(tokens)
+    
     result = []
     i = 0
-    while i < len(tokens):
-        word = tokens[i]
-        if word in NEGATION_WORDS and i + 1 < len(tokens):
-            result.append(f"{word}_{tokens[i + 1]}")
+
+    while i < len(tagged_tokens):
+        word, tag = tagged_tokens[i]
+        
+        if word in negation_words and i + 1 < len(tagged_tokens):
+            next_word, next_tag = tagged_tokens[i + 1]
+            
+            # لو الكلمة اللي بعد النفي هي صفة (JJ) أو فعل (VB) أو ظرف (RB)
+            # زي: not + favorite (JJ) أو not + love (VB)
+            if next_tag.startswith('J') or next_tag.startswith('V') or next_tag.startswith('R'):
+                # نلزقهم ببعض عشان الموديل يقراها ككلمة واحدة معناها سلبي
+                result.append(f"not_{next_word}") 
+            else:
+                # لو اسم، بنسيب النفي لوحده
+                result.append(word)
+                result.append(next_word)
             i += 2
         else:
             result.append(word)
             i += 1
-    return " ".join(result)
 
+    return " ".join(result)
 
 def clean_text(text):
     text = remove_html(text).strip()
-    if not text:
-        return ""
-
+    if not text: return ""
     text = normalize_contractions(text)
     text = remove_punctuation(text)
-
-    tagged_tokens = pos_tag(word_tokenize(text))
-
+    tokens = word_tokenize(text)
+    tagged_tokens = pos_tag(tokens)
     cleaned_tokens = []
     for word, tag in tagged_tokens:
-        if word in stop_words:
-            continue
-        cleaned_tokens.append(lemmatizer.lemmatize(word, get_wordnet_pos(tag)))
-
-    return handle_negation(" ".join(cleaned_tokens))
-
+        if word in stop_words: continue
+        lemma = lemmatizer.lemmatize(word, get_wordnet_pos(tag))
+        cleaned_tokens.append(lemma)
+    text = " ".join(cleaned_tokens)
+    return handle_negation(text)
 
 # ============================================================
-# 5. Routes
+# 5. Vector conversion for FastText
+# ============================================================
+def get_sentence_vector(text):
+    tokens = text.split()
+    vectors = [fasttext_model.wv[word] for word in tokens if word in fasttext_model.wv]
+    if len(vectors) == 0:
+        return np.zeros(100)
+    return np.mean(vectors, axis=0)
+
+# ============================================================
+# 6. Routes
 # ============================================================
 @app.route('/', methods=['GET'])
 def home():
-    return jsonify({
-        'message': 'Movie Review Analyzer API is running!',
-        'endpoints': {
-            'POST /predict': 'Analyze a movie review',
-            'GET /health': 'Check server status'
-        }
-    })
-
-
-@app.route('/health', methods=['GET'])
-def health():
-    return jsonify({
-        'status': 'ok',
-        'model_loaded': model is not None,
-        'vectorizer_loaded': vectorizer is not None
-    })
-
+    return jsonify({'message': 'API is running!'})
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    """
-    Request : { "review": "The movie was amazing!" }
-    Response: { "sentiment": "Positive", "confidence": 94.5, "cleaned_text": "..." }
-    """
     try:
         data = request.get_json(silent=True)
         if not data:
@@ -174,20 +157,44 @@ def predict():
 
         review = str(data.get('review') or '').strip()
         if not review:
-            return jsonify({'error': 'Field "review" is required and cannot be empty'}), 400
+            return jsonify({'error': 'Field "review" is required'}), 400
 
         cleaned = clean_text(review)
         if not cleaned:
-            return jsonify({
-                'error': 'Review is empty after cleaning. Please provide more meaningful text.'
-            }), 400
+            return jsonify({'error': 'Review is empty after cleaning.'}), 400
 
-        vectorized = vectorizer.transform([cleaned])
+        # =======================================================
+        # 🛑 Rule-Based Override: التعامل مع نفي النفي برمجياً
+        # =======================================================
+        # لو الجملة فيها "not_bad" نعتبرها إيجابية
+        if "not_bad" in cleaned:
+            return jsonify({
+                'sentiment': 'Positive',
+                'confidence': 95.0,
+                'cleaned_text': cleaned
+            }), 200
+            
+        # لو فيها "not_love" أو "not_like" نعتبرها سلبية
+        if "not_love" in cleaned or "not_like" in cleaned:
+            return jsonify({
+                'sentiment': 'Negative',
+                'confidence': 98.0,
+                'cleaned_text': cleaned
+            }), 200
+        # =======================================================
+
+        # لو مفيش القواعد دي، نكمل بالموديل العادي
+        vectorized = get_sentence_vector(cleaned).reshape(1, -1)
+        prediction = int(model.predict(vectorized)[0])
+        # ... باقي الكود زي ما هو
+
+        # التحويل باستخدام FastText
+        vectorized = get_sentence_vector(cleaned).reshape(1, -1)
+        
         prediction = int(model.predict(vectorized)[0])
         probabilities = model.predict_proba(vectorized)[0]
         confidence = float(max(probabilities) * 100)
 
-        # Training labels: positive -> 1, negative -> 0
         sentiment = 'Positive' if prediction == 1 else 'Negative'
 
         return jsonify({
@@ -199,11 +206,9 @@ def predict():
     except Exception as e:
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
 
-
 # ============================================================
-# 6. Run
+# 7. Run
 # ============================================================
 if __name__ == '__main__':
     print("\nMovie Review Analyzer API")
-    print("Server running at: http://127.0.0.1:5000")
     app.run(debug=True, host='0.0.0.0', port=5000)
