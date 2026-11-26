@@ -1,0 +1,80 @@
+{
+  "protocol": {
+    "dataset": "IMDB Dataset.csv",
+    "split": "70% train / 10% validation / 20% test",
+    "random_state": 42,
+    "test_set_shared": true
+  },
+  "models": {
+    "svm": {
+      "model": "SVM (TF-IDF + calibrated LinearSVC)",
+      "accuracy": 0.9000605082694635,
+      "precision": 0.8893883134649209,
+      "recall": 0.9145900321543409,
+      "f1": 0.9018131378182899,
+      "roc_auc": 0.9654220826770116,
+      "training_seconds": 2.574,
+      "inference_seconds_total": 0.037,
+      "test_samples": 9916,
+      "confusion_matrix": [
+        [
+          4374,
+          566
+        ],
+        [
+          425,
+          4551
+        ]
+      ],
+      "class_order": [
+        "Negative",
+        "Positive"
+      ],
+      "split": {
+        "train": 34701,
+        "test": 9916
+      }
+    }
+  },
+  "LSTM": {
+    "model": "LSTM (Embedding + PyTorch LSTM)",
+    "accuracy": 0.8739411052843888,
+    "precision": 0.8549923780487805,
+    "recall": 0.9017282958199357,
+    "f1": 0.8777386541471048,
+    "roc_auc": 0.943758624393038,
+    "training_seconds": 3805.49,
+    "inference_seconds_total": 11.101,
+    "test_samples": 9916,
+    "confusion_matrix": [
+      [
+        4179,
+        761
+      ],
+      [
+        489,
+        4487
+      ]
+    ],
+    "class_order": [
+      "Negative",
+      "Positive"
+    ],
+    "split": {
+      "train": 34701,
+      "validation": 4957,
+      "test": 9916
+    },
+    "training_config": {
+      "max_vocab": 30000,
+      "actual_vocab_size": 30000,
+      "max_len": 250,
+      "embedding_dim": 128,
+      "hidden_dim": 128,
+      "batch_size": 128,
+      "epochs_configured": 6,
+      "best_validation_loss": 0.29598577522283986,
+      "device": "cpu"
+    }
+  }
+}

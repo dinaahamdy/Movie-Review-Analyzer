@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model Evaluation & Research - MovieMind</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/model-comparison.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<header><nav>
+  <a href="index.html" class="logo"><span>✨</span> MovieMind</a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="movies.html">Explore Movies</a></li>
+    <li><a href="write-review.html">Write a Review</a></li>
+    <li><a href="sentiment.html">Sentiment Insights</a></li>
+    <li><a href="about-nlp.html">About NLP</a></li>
+    <li><a href="model-comparison.html" class="active">Model Research</a></li>
+  </ul>
+</nav></header>
+
+<main class="research-page">
+  <section class="research-hero">
+    <p class="eyebrow">MOVIEMIND · NLP RESEARCH</p>
+    <h1>Understanding Movie Emotions</h1>
+    <p class="hero-subtitle">A comparative study of Natural Language Processing models for movie-review sentiment analysis.</p>
+    <div class="hero-tags"><span>Natural Language Processing</span><span>Sentiment Analysis</span><span>Machine Learning</span><span>Deep Learning</span></div>
+    <a class="btn" href="#results">Explore the Results</a>
+  </section>
+
+  <section class="research-section" id="overview">
+    <div class="section-heading"><p class="eyebrow">01 · THE PROJECT</p><h2>Project Overview</h2></div>
+    <div class="overview-grid">
+      <article class="research-card overview-main">
+        <h3>What are we solving?</h3>
+        <p>Movie reviews contain valuable opinions, but manually reading thousands of reviews is time-consuming. This project applies NLP and sentiment classification to identify whether a review expresses a positive or negative opinion.</p>
+        <p>The study compares a TF-IDF-based baseline with sequence-based and contextual language representations.</p>
+      </article>
+      <article class="research-card">
+        <h3>Dataset</h3><strong class="big-stat">IMDb</strong>
+        <p>Movie-review text with positive and negative sentiment labels. The exact sample counts used in training will be loaded from the experiment results.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="research-section">
+    <div class="section-heading"><p class="eyebrow">02 · NLP PIPELINE</p><h2>From Text to Sentiment</h2></div>
+    <div class="pipeline">
+      <div><b>01</b><strong>Input Review</strong><small>Raw movie-review text</small></div><i>→</i>
+      <div><b>02</b><strong>Preprocessing</strong><small>Cleaning and normalization</small></div><i>→</i>
+      <div><b>03</b><strong>Text Representation</strong><small>TF-IDF / Token IDs / ELMo</small></div><i>→</i>
+      <div><b>04</b><strong>Classification</strong><small>Positive or Negative</small></div>
+    </div>
+    <p class="method-note">For a fair comparison, all models should use the same train/test split and the same evaluation set. Each representation must use preprocessing appropriate to that model.</p>
+  </section>
+
+  <section class="research-section">
+    <div class="section-heading"><p class="eyebrow">03 · THE MODELS</p><h2>Three NLP Approaches</h2></div>
+    <div class="model-grid">
+      <article class="research-card model-card"><span class="model-number">MODEL 01 · BASELINE</span><h3>TF-IDF + Linear SVM</h3><p>Represents a review as weighted word and phrase features, then uses a linear Support Vector Machine classifier. This is the current training approach found in the project code.</p><ul><li>Sparse lexical features</li><li>Fast training and inference</li><li>Does not explicitly model word order</li></ul></article>
+      <article class="research-card model-card"><span class="model-number">MODEL 02 · DEEP LEARNING</span><h3>LSTM</h3><p>Uses token embeddings and recurrent memory to learn patterns across word sequences in a review.</p><ul><li>Sequence-aware representation</li><li>Captures order and longer dependencies</li><li>Requires tokenization and padding</li></ul></article>
+      <article class="research-card model-card"><span class="model-number">MODEL 03 · CONTEXTUAL NLP</span><h3>ELMo + Classifier</h3><p>Uses pretrained contextual word representations. A word's vector depends on the surrounding sentence context, then a classifier predicts sentiment.</p><ul><li>Context-dependent embeddings</li><li>Pretrained language representation</li><li>Higher setup and compute requirements</li></ul></article>
+    </div>
+    <p class="method-note"><strong>Important:</strong> ELMo is itself based on a bidirectional language-model LSTM. In this comparison, “LSTM” means a task-trained sequence classifier, while “ELMo” means pretrained contextual embeddings followed by a sentiment classifier.</p>
+  </section>
+
+  <section class="research-section" id="results">
+    <div class="section-heading"><p class="eyebrow">04 · EXPERIMENTAL RESULTS</p><h2>Model Performance</h2><p>Charts below are populated from the actual experiment output. No estimated or placeholder scores are displayed.</p></div>
+    <div id="resultsStatus" class="status-panel" role="status">Loading experiment results…</div>
+    <div id="resultsContent" hidden>
+      <div class="metric-cards" id="metricCards"></div>
+      <div class="chart-grid">
+        <article class="research-card chart-card"><h3>Evaluation Metrics</h3><p>Accuracy, precision, recall and F1-score.</p><canvas id="metricsChart"></canvas></article>
+        <article class="research-card chart-card"><h3>Training Time</h3><p>Elapsed training time in seconds.</p><canvas id="timeChart"></canvas></article>
+        <article class="research-card chart-card wide"><h3>ROC Curve</h3><p>True positive rate against false positive rate.</p><canvas id="rocChart"></canvas></article>
+      </div>
+      <h3 class="subheading">Confusion Matrices</h3>
+      <div id="confusionMatrices" class="confusion-grid"></div>
+      <div class="results-note" id="experimentDetails"></div>
+    </div>
+  </section>
+
+  <section class="research-section">
+    <div class="section-heading"><p class="eyebrow">05 · CONCLUSION</p><h2>What We Learn</h2></div>
+    <div class="research-card">
+      <p id="conclusionText">After all experiments have been completed, compare the models using F1-score alongside accuracy, precision, recall, training time and the confusion matrices. The best model should be selected based on the project's evaluation priorities, not accuracy alone.</p>
+    </div>
+  </section>
+
+  <section class="research-section">
+    <div class="section-heading"><p class="eyebrow">06 · FUTURE WORK</p><h2>Next Improvements</h2></div>
+    <div class="future-grid">
+      <div class="research-card"><h3>More Context</h3><p>Investigate transformer-based models such as BERT if compute resources allow.</p></div>
+      <div class="research-card"><h3>Robust Evaluation</h3><p>Use repeated or cross-validation experiments and inspect errors such as sarcasm and mixed sentiment.</p></div>
+      <div class="research-card"><h3>Deployment</h3><p>Integrate the selected model into the Flask API and test it through the review form.</p></div>
+    </div>
+  </section>
+</main>
+<footer><p>© 2026 MovieMind · NLP Model Research</p></footer>
+<script src="js/main.js"></script>
+<script src="js/model-comparison.js"></script>
+</body>
+</html>

@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <li><a href="write-review.html" class="active">Write a Review</a></li>
                 <li><a href="sentiment.html">Sentiment Insights</a></li>
                 <li><a href="about-nlp.html">About NLP</a></li>
+                <li><a href="model-comparison.html">Model Research</a></li>
             </ul>
         `;
     }
