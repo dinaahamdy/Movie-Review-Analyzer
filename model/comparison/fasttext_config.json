@@ -1,0 +1,16 @@
+{
+    "model_name": "FastText + Logistic Regression",
+    "text_column": "clean_review",
+    "label_column": "label",
+    "vector_size": 100,
+    "window": 5,
+    "min_count": 2,
+    "epochs": 10,
+    "sg": 1,
+    "min_n": 3,
+    "max_n": 6,
+    "best_C": 10.0,
+    "random_state": 42,
+    "embedding_training_data": "train_only",
+    "classifier_training_data": "train_plus_validation"
+}

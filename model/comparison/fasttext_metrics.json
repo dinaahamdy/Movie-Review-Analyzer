@@ -1,0 +1,63 @@
+{
+    "model_name": "FastText + Logistic Regression",
+    "validation": {
+        "best_f1": 0.8769945465562513,
+        "best_C": 10.0
+    },
+    "test": {
+        "accuracy": 0.877067365873336,
+        "precision": 0.8707321886717979,
+        "recall": 0.8866559485530546,
+        "f1": 0.8786219257194066,
+        "roc_auc": 0.9471934516448182,
+        "confusion_matrix": [
+            [
+                4285,
+                655
+            ],
+            [
+                564,
+                4412
+            ]
+        ],
+        "classification_report": {
+            "Negative": {
+                "precision": 0.8836873582181893,
+                "recall": 0.8674089068825911,
+                "f1-score": 0.875472469097967,
+                "support": 4940.0
+            },
+            "Positive": {
+                "precision": 0.8707321886717979,
+                "recall": 0.8866559485530546,
+                "f1-score": 0.8786219257194066,
+                "support": 4976.0
+            },
+            "accuracy": 0.877067365873336,
+            "macro avg": {
+                "precision": 0.8772097734449936,
+                "recall": 0.8770324277178229,
+                "f1-score": 0.8770471974086869,
+                "support": 9916.0
+            },
+            "weighted avg": {
+                "precision": 0.8771862565982981,
+                "recall": 0.877067365873336,
+                "f1-score": 0.8770529144537843,
+                "support": 9916.0
+            }
+        }
+    },
+    "timing": {
+        "embedding_training_seconds": 372.15153299999656,
+        "vectorization_seconds": 32.57092139997985,
+        "classifier_tuning_seconds": 0.7588430999894626,
+        "classifier_final_fit_seconds": 0.31199009995907545,
+        "classifier_prediction_seconds": 0.0055942999897524714
+    },
+    "dataset_sizes": {
+        "train": 34701,
+        "validation": 4957,
+        "test": 9916
+    }
+}

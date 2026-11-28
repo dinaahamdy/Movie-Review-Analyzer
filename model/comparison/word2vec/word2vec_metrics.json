@@ -1,0 +1,35 @@
+{
+  "accuracy": 0.8810004033884631,
+  "precision": 0.8749506124061636,
+  "recall": 0.890072347266881,
+  "f1": 0.8824467025303845,
+  "roc_auc": 0.948706137638804,
+  "confusion_matrix": [
+    [
+      4307,
+      633
+    ],
+    [
+      547,
+      4429
+    ]
+  ],
+  "training_seconds": 128.7427716255188,
+  "embedding_training_seconds": 127.99795293807983,
+  "classifier_training_seconds": 0.7448186874389648,
+  "vectorization_seconds": 9.540671110153198,
+  "inference_seconds_total": 0.0045702457427978516,
+  "test_samples": 9916,
+  "best_C": 0.1,
+  "best_validation_f1": 0.8776949425750554,
+  "training_config": {
+    "embedding": "Word2Vec",
+    "classifier": "LinearSVC",
+    "vector_size": 100,
+    "window": 5,
+    "min_count": 2,
+    "epochs": 10,
+    "embedding_training_data": "train_only",
+    "classifier_training_data": "train_plus_validation"
+  }
+}

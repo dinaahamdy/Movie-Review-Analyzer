@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MovieMind research presentation: comparative evaluation of NLP models for IMDb movie-review sentiment analysis.">
   <title>Model Evaluation & Research - MovieMind</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/model-comparison.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <header><nav>
@@ -24,81 +24,264 @@
 
 <main class="research-page">
   <section class="research-hero">
-    <p class="eyebrow">MOVIEMIND · NLP RESEARCH</p>
-    <h1>Understanding Movie Emotions</h1>
-    <p class="hero-subtitle">A comparative study of Natural Language Processing models for movie-review sentiment analysis.</p>
-    <div class="hero-tags"><span>Natural Language Processing</span><span>Sentiment Analysis</span><span>Machine Learning</span><span>Deep Learning</span></div>
-    <a class="btn" href="#results">Explore the Results</a>
+    <div class="hero-content">
+      <p class="eyebrow">MOVIEMIND · NLP RESEARCH PRESENTATION</p>
+      <h1>Understanding the Sentiment Behind Every Review</h1>
+      <p class="hero-subtitle">A comparative study of Natural Language Processing models for positive and negative IMDb movie-review classification.</p>
+      <div class="hero-tags">
+        <span>Natural Language Processing</span><span>Sentiment Analysis</span>
+        <span>Machine Learning</span><span>Deep Learning</span>
+      </div>
+      <a class="research-cta" href="#results">Explore the Research <span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="hero-mark" aria-hidden="true"><span>MM</span><i></i><i></i><i></i></div>
   </section>
 
   <section class="research-section" id="overview">
-    <div class="section-heading"><p class="eyebrow">01 · THE PROJECT</p><h2>Project Overview</h2></div>
+    <div class="section-heading">
+      <p class="eyebrow">01 · THE PROJECT</p>
+      <h2>Project Overview</h2>
+      <p>Turning thousands of movie opinions into meaningful sentiment insights.</p>
+    </div>
     <div class="overview-grid">
       <article class="research-card overview-main">
+        <span class="card-kicker">THE CHALLENGE</span>
         <h3>What are we solving?</h3>
-        <p>Movie reviews contain valuable opinions, but manually reading thousands of reviews is time-consuming. This project applies NLP and sentiment classification to identify whether a review expresses a positive or negative opinion.</p>
-        <p>The study compares a TF-IDF-based baseline with sequence-based and contextual language representations.</p>
+        <p>Movie reviews contain valuable opinions about stories, acting, direction, and the overall viewing experience. Reading and classifying a large number of reviews manually is time-consuming.</p>
+        <p>MovieMind applies Natural Language Processing and sentiment classification to determine whether a written review expresses a positive or negative opinion.</p>
       </article>
-      <article class="research-card">
-        <h3>Dataset</h3><strong class="big-stat">IMDb</strong>
-        <p>Movie-review text with positive and negative sentiment labels. The exact sample counts used in training will be loaded from the experiment results.</p>
+      <article class="research-card dataset-card">
+        <span class="card-kicker">RESEARCH DATA</span>
+        <strong class="big-stat">IMDb</strong>
+        <h3>Movie Reviews Dataset</h3>
+        <p>Text reviews labeled with positive or negative sentiment.</p>
+        <div class="dataset-detail"><span>Evaluation set</span><strong>9,916 samples</strong></div>
       </article>
     </div>
   </section>
 
-  <section class="research-section">
-    <div class="section-heading"><p class="eyebrow">02 · NLP PIPELINE</p><h2>From Text to Sentiment</h2></div>
+  <section class="research-section" id="pipeline">
+    <div class="section-heading">
+      <p class="eyebrow">02 · METHODOLOGY</p>
+      <h2>From Text to Sentiment</h2>
+      <p>The common workflow used to transform a raw review into a predicted class.</p>
+    </div>
     <div class="pipeline">
-      <div><b>01</b><strong>Input Review</strong><small>Raw movie-review text</small></div><i>→</i>
-      <div><b>02</b><strong>Preprocessing</strong><small>Cleaning and normalization</small></div><i>→</i>
-      <div><b>03</b><strong>Text Representation</strong><small>TF-IDF / Token IDs / ELMo</small></div><i>→</i>
-      <div><b>04</b><strong>Classification</strong><small>Positive or Negative</small></div>
+      <div class="pipeline-step"><b>01</b><strong>Input Review</strong><small>Raw movie-review text</small></div>
+      <span class="pipeline-arrow" aria-hidden="true">→</span>
+      <div class="pipeline-step"><b>02</b><strong>Preprocessing</strong><small>Cleaning and normalization</small></div>
+      <span class="pipeline-arrow" aria-hidden="true">→</span>
+      <div class="pipeline-step"><b>03</b><strong>Text Representation</strong><small>Features, embeddings, or contextual vectors</small></div>
+      <span class="pipeline-arrow" aria-hidden="true">→</span>
+      <div class="pipeline-step"><b>04</b><strong>Classification</strong><small>Positive or Negative</small></div>
     </div>
-    <p class="method-note">For a fair comparison, all models should use the same train/test split and the same evaluation set. Each representation must use preprocessing appropriate to that model.</p>
+    <p class="method-note">The reported comparison evaluates each experiment on 9,916 test samples. Each model uses its corresponding text-representation and classification approach.</p>
   </section>
 
-  <section class="research-section">
-    <div class="section-heading"><p class="eyebrow">03 · THE MODELS</p><h2>Three NLP Approaches</h2></div>
-    <div class="model-grid">
-      <article class="research-card model-card"><span class="model-number">MODEL 01 · BASELINE</span><h3>TF-IDF + Linear SVM</h3><p>Represents a review as weighted word and phrase features, then uses a linear Support Vector Machine classifier. This is the current training approach found in the project code.</p><ul><li>Sparse lexical features</li><li>Fast training and inference</li><li>Does not explicitly model word order</li></ul></article>
-      <article class="research-card model-card"><span class="model-number">MODEL 02 · DEEP LEARNING</span><h3>LSTM</h3><p>Uses token embeddings and recurrent memory to learn patterns across word sequences in a review.</p><ul><li>Sequence-aware representation</li><li>Captures order and longer dependencies</li><li>Requires tokenization and padding</li></ul></article>
-      <article class="research-card model-card"><span class="model-number">MODEL 03 · CONTEXTUAL NLP</span><h3>ELMo + Classifier</h3><p>Uses pretrained contextual word representations. A word's vector depends on the surrounding sentence context, then a classifier predicts sentiment.</p><ul><li>Context-dependent embeddings</li><li>Pretrained language representation</li><li>Higher setup and compute requirements</li></ul></article>
+  <section class="research-section" id="models">
+    <div class="section-heading">
+      <p class="eyebrow">03 · THE EXPERIMENTS</p>
+      <h2>Five Models. One Evaluation Set.</h2>
+      <p>Different ways of representing language and learning sentiment patterns.</p>
     </div>
-    <p class="method-note"><strong>Important:</strong> ELMo is itself based on a bidirectional language-model LSTM. In this comparison, “LSTM” means a task-trained sequence classifier, while “ELMo” means pretrained contextual embeddings followed by a sentiment classifier.</p>
+    <div class="model-grid">
+      <article class="research-card model-card">
+        <span class="model-number">MODEL 01</span><h3>svm</h3>
+        <p>A Support Vector Machine-based approach used as a strong traditional machine-learning baseline for text classification.</p>
+        <span class="model-type">Traditional Machine Learning</span>
+      </article>
+      <article class="research-card model-card featured-model">
+        <span class="model-number">MODEL 02</span><h3>Word2Vec</h3>
+        <p>Represents words as dense vectors that capture semantic relationships, then uses a LinearSVC classifier for sentiment prediction.</p>
+        <span class="model-type">Word Embeddings + LinearSVC</span>
+        <span class="deployment-label">Used in the MovieMind application</span>
+      </article>
+      <article class="research-card model-card">
+        <span class="model-number">MODEL 03</span><h3>LSTM</h3>
+        <p>A recurrent neural network architecture designed to learn patterns and dependencies across sequences of words.</p>
+        <span class="model-type">Deep Learning · Sequence Model</span>
+      </article>
+      <article class="research-card model-card">
+        <span class="model-number">MODEL 04</span><h3>FastText</h3>
+        <p>Uses word representations built from character n-grams, helping the model learn information from subword units.</p>
+        <span class="model-type">Subword Embeddings</span>
+      </article>
+      <article class="research-card model-card">
+        <span class="model-number">MODEL 05</span><h3>ELMo</h3>
+        <p>Uses deep contextualized word representations, where a word's representation is influenced by its surrounding context.</p>
+        <span class="model-type">Contextual Language Representation</span>
+      </article>
+    </div>
+    <p class="method-note"><strong>Deployment note:</strong> The highest score in the research comparison is not automatically the model used by the application. MovieMind's integrated sentiment model is Word2Vec + LinearSVC.</p>
   </section>
 
   <section class="research-section" id="results">
-    <div class="section-heading"><p class="eyebrow">04 · EXPERIMENTAL RESULTS</p><h2>Model Performance</h2><p>Charts below are populated from the actual experiment output. No estimated or placeholder scores are displayed.</p></div>
-    <div id="resultsStatus" class="status-panel" role="status">Loading experiment results…</div>
-    <div id="resultsContent" hidden>
-      <div class="metric-cards" id="metricCards"></div>
-      <div class="chart-grid">
-        <article class="research-card chart-card"><h3>Evaluation Metrics</h3><p>Accuracy, precision, recall and F1-score.</p><canvas id="metricsChart"></canvas></article>
-        <article class="research-card chart-card"><h3>Training Time</h3><p>Elapsed training time in seconds.</p><canvas id="timeChart"></canvas></article>
-        <article class="research-card chart-card wide"><h3>ROC Curve</h3><p>True positive rate against false positive rate.</p><canvas id="rocChart"></canvas></article>
+    <div class="section-heading">
+      <p class="eyebrow">04 · EXPERIMENTAL RESULTS</p>
+      <h2>Model Performance</h2>
+      <p>Exact evaluation values from the completed model-comparison experiments.</p>
+    </div>
+
+    <div class="result-highlights">
+      <article class="highlight-card"><span>Highest F1-score</span><strong>90.2101%</strong><small>svm · Rank 1</small></article>
+      <article class="highlight-card"><span>Models evaluated</span><strong>05</strong><small>Compared on the same test set</small></article>
+      <article class="highlight-card"><span>Test samples</span><strong>9,916</strong><small>Evaluation samples per model</small></article>
+    </div>
+
+    <article class="research-card table-card">
+      <div class="table-heading">
+        <div><span class="card-kicker">FULL METRICS</span><h3>Comparative Results</h3></div>
+        <span class="table-note">Values are shown exactly as reported (%)</span>
       </div>
-      <h3 class="subheading">Confusion Matrices</h3>
-      <div id="confusionMatrices" class="confusion-grid"></div>
-      <div class="results-note" id="experimentDetails"></div>
+      <div class="table-scroll">
+        <table class="results-table">
+          <thead><tr>
+            <th>F1 Rank</th><th>Model</th><th>Accuracy (%)</th><th>Precision (%)</th>
+            <th>Recall (%)</th><th>F1-score (%)</th><th>ROC-AUC (%)</th>
+            <th>Training Time (s)</th><th>Inference Time (s)</th><th>Test Samples</th>
+          </tr></thead>
+          <tbody>
+            <tr><td><span class="rank rank-first">1</span></td><th scope="row">svm</th><td>90.0363</td><td>88.9758</td><td>91.4791</td><td class="f1-value">90.2101</td><td>96.5407</td><td>1.8510</td><td>0.0350</td><td>9916</td></tr>
+            <tr><td><span class="rank">2</span></td><th scope="row">Word2Vec</th><td>88.1000</td><td>87.4951</td><td>89.0072</td><td class="f1-value">88.2447</td><td>94.8706</td><td>128.7428</td><td>0.0046</td><td>9916</td></tr>
+            <tr><td><span class="rank">3</span></td><th scope="row">LSTM</th><td>88.0194</td><td>88.6531</td><td>87.2990</td><td class="f1-value">87.9708</td><td>94.4199</td><td>30.5490</td><td>0.4630</td><td>9916</td></tr>
+            <tr><td><span class="rank">4</span></td><th scope="row">FastText</th><td>87.7874</td><td>87.1668</td><td>88.7259</td><td class="f1-value">87.9394</td><td>94.6690</td><td>265.0551</td><td>0.0119</td><td>9916</td></tr>
+            <tr><td><span class="rank">5</span></td><th scope="row">ELMo</th><td>85.8612</td><td>85.8835</td><td>85.9526</td><td class="f1-value">85.9180</td><td>92.9267</td><td>2904.3590</td><td>672.4740</td><td>9916</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-footnote">F1 Rank is ordered from the highest to the lowest F1-score. Training and inference times are reported in seconds.</p>
+    </article>
+  </section>
+
+  <section class="research-section" id="visual-results">
+    <div class="section-heading">
+      <p class="eyebrow">05 · VISUAL ANALYSIS</p>
+      <h2>Experiment Visualizations</h2>
+      <p>Original plots exported from the Kaggle experiments. These images are displayed as provided, without recreating or modifying the charts.</p>
+    </div>
+    <div class="visual-grid">
+      <figure class="research-card visual-card visual-wide">
+        <img src="../reports/comparison/model_performance_comparison.png" alt="Kaggle model performance comparison chart" loading="lazy">
+        <figcaption><strong>Model Performance Comparison</strong><span>Evaluation metrics across the compared models.</span></figcaption>
+      </figure>
+      <figure class="research-card visual-card">
+        <img src="../reports/comparison/training_time_comparison.png" alt="Kaggle training time comparison chart" loading="lazy">
+        <figcaption><strong>Training Time Comparison</strong><span>Time required to train each model.</span></figcaption>
+      </figure>
+      <figure class="research-card visual-card">
+        <img src="../reports/comparison/inference_time_comparison.png" alt="Kaggle inference time comparison chart" loading="lazy">
+        <figcaption><strong>Inference Time Comparison</strong><span>Time required to generate predictions.</span></figcaption>
+      </figure>
+      <figure class="research-card visual-card visual-wide">
+        <img src="../reports/comparison/confusion_matrices_comparison.png" alt="Kaggle confusion matrices comparing model predictions" loading="lazy">
+        <figcaption><strong>Confusion Matrices</strong><span>Correct and incorrect predictions for each model.</span></figcaption>
+      </figure>
+    </div>
+    <div class="elmo-gallery">
+      <div class="section-heading compact-heading">
+        <p class="eyebrow">ELMO EXPERIMENT</p><h3>Additional ELMo Results</h3>
+      </div>
+      <div class="visual-grid elmo-grid">
+        <figure class="research-card visual-card"><img src="../reports/elmo/elmo_metrics.png" alt="Kaggle ELMo evaluation metrics" loading="lazy"><figcaption><strong>ELMo Metrics</strong><span>Evaluation metrics for ELMo.</span></figcaption></figure>
+        <figure class="research-card visual-card"><img src="../reports/elmo/elmo_confusion_matrix.png" alt="Kaggle ELMo confusion matrix" loading="lazy"><figcaption><strong>ELMo Confusion Matrix</strong><span>ELMo classification outcomes.</span></figcaption></figure>
+        <figure class="research-card visual-card"><img src="../reports/elmo/elmo_timing.png" alt="Kaggle ELMo timing results" loading="lazy"><figcaption><strong>ELMo Timing</strong><span>Training and inference timing for ELMo.</span></figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-section" id="conclusion">
+    <div class="section-heading">
+      <p class="eyebrow">06 · CONCLUSION</p>
+      <h2>What the Results Tell Us</h2>
+    </div>
+    <div class="conclusion-grid">
+      <article class="research-card conclusion-main">
+        <span class="card-kicker">RESEARCH FINDING</span>
+        <h3>svm achieved the highest F1-score</h3>
+        <p>Among the five evaluated approaches, svm ranked first with an F1-score of 90.2101% and a ROC-AUC of 96.5407%. Word2Vec ranked second with an F1-score of 88.2447%.</p>
+        <p>The results show why model selection should consider more than one metric: predictive performance, training cost, inference speed, and the requirements of the final application all matter.</p>
+      </article>
+      <article class="research-card deployment-card">
+        <span class="card-kicker">APPLICATION MODEL</span>
+        <h3>Word2Vec + LinearSVC</h3>
+        <p>This is the model integrated into MovieMind. The research comparison and the deployed application model serve two different purposes: one reports the best measured score, while the other reflects the model selected for the application.</p>
+      </article>
     </div>
   </section>
 
   <section class="research-section">
-    <div class="section-heading"><p class="eyebrow">05 · CONCLUSION</p><h2>What We Learn</h2></div>
-    <div class="research-card">
-      <p id="conclusionText">After all experiments have been completed, compare the models using F1-score alongside accuracy, precision, recall, training time and the confusion matrices. The best model should be selected based on the project's evaluation priorities, not accuracy alone.</p>
+    <div class="section-heading">
+      <p class="eyebrow">07 · FUTURE WORK</p><h2>Next Improvements</h2>
+      <p>Potential directions to extend the research and the MovieMind experience.</p>
     </div>
-  </section>
-
-  <section class="research-section">
-    <div class="section-heading"><p class="eyebrow">06 · FUTURE WORK</p><h2>Next Improvements</h2></div>
     <div class="future-grid">
-      <div class="research-card"><h3>More Context</h3><p>Investigate transformer-based models such as BERT if compute resources allow.</p></div>
-      <div class="research-card"><h3>Robust Evaluation</h3><p>Use repeated or cross-validation experiments and inspect errors such as sarcasm and mixed sentiment.</p></div>
-      <div class="research-card"><h3>Deployment</h3><p>Integrate the selected model into the Flask API and test it through the review form.</p></div>
+      <article class="research-card"><span class="future-index">01</span><h3>More Context</h3><p>Explore transformer-based language models and compare their benefits against the current approaches.</p></article>
+      <article class="research-card"><span class="future-index">02</span><h3>Robust Evaluation</h3><p>Investigate challenging reviews, including sarcasm, mixed opinions, and context-dependent expressions.</p></article>
+      <article class="research-card"><span class="future-index">03</span><h3>Product Experience</h3><p>Continue improving the integration between the sentiment model, backend API, and MovieMind interface.</p></article>
     </div>
+  </section>
+
+  <section class="research-section team-section" id="team">
+    <div class="section-heading">
+      <p class="eyebrow">08 · THE PEOPLE BEHIND THE PROJECT</p>
+      <h2>Meet Our Team</h2>
+      <p>Four minds, one shared vision, and a passion for turning ideas into meaningful technology.</p>
+    </div>
+    <div class="team-grid">
+      <article class="research-card team-member-card">
+<div class="team-photo-placeholder">
+    <img src="images/team/member1.jpg" alt="Dalia Alagawy">
+</div>
+        <h3>Dalia Alagawy</h3><p>Team Member</p>
+      </article>
+      <article class="research-card team-member-card">
+      <div class="team-photo-placeholder">
+    <img src="images/team/member2.jpg" alt="Raneen">
+</div>
+        <h3>Raneen Elalfy</h3><p>Team Member</p>
+      </article>
+      <article class="research-card team-member-card">
+       <div class="team-photo-placeholder">
+    <img src="images/team/member3.jpg" alt="Rawan">
+</div>
+        <h3>Rawan Osama</h3><p>Team Member</p>
+      </article>
+      <article class="research-card team-member-card">
+       <div class="team-photo-placeholder">
+    <img src="images/team/member4.jpg" alt="Dina">
+</div>
+        <h3>Dina Hamdy</h3><p>Team Member</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="research-section supervisor-section" id="special-thanks">
+    <div class="section-heading">
+      <p class="eyebrow">09 · WITH GRATITUDE</p>
+      <h2>Special Thanks</h2>
+    </div>
+    <article class="research-card supervisor-card">
+    <div class="supervisor-photo-placeholder">
+    <img src="images/team/doctor.jpg" alt="Project Supervisor">
+</div>
+      <div class="supervisor-message">
+        <span class="card-kicker">OUR SUPERVISOR</span>
+        <h3>Samar Handousa</h3>
+        <p class="supervisor-role">Project Supervisor</p>
+        <p>We would like to express our sincere gratitude for your guidance, continuous support, and valuable feedback throughout this project. Your knowledge, encouragement, and dedication have played an important role in shaping our work and helping us grow.</p>
+        <p class="thank-you-signature">With appreciation and respect,<br><strong>The MovieMind Team</strong></p>
+      </div>
+    </article>
+  </section>
+
+  <section class="thank-you-section">
+    <p class="eyebrow">MOVIEMIND · NLP RESEARCH</p>
+    <h2>Thank You</h2>
+    <p>Thank you for your time, guidance, and interest in our work.</p>
+    <a href="#overview">Back to the beginning ↑</a>
   </section>
 </main>
+
 <footer><p>© 2026 MovieMind · NLP Model Research</p></footer>
 <script src="js/main.js"></script>
 <script src="js/model-comparison.js"></script>

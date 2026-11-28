@@ -1,0 +1,10 @@
+{
+  "embedding": "Word2Vec",
+  "classifier": "LinearSVC",
+  "vector_size": 100,
+  "window": 5,
+  "min_count": 2,
+  "epochs": 10,
+  "embedding_training_data": "train_only",
+  "classifier_training_data": "train_plus_validation"
+}

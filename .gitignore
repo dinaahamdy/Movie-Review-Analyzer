@@ -10,3 +10,10 @@ venv/
 # Local backups
 local_changes.patch
 local_experiments_backup.zip
+# Large FastText embedding artifacts
+model/comparison/fasttext_embeddings.model
+model/comparison/fasttext_embeddings.model.wv.vectors_ngrams.npy
+# Local backup copies
+*.bak
+/frontend_backup/
+model/comparison/fasttext_classifier.joblib
