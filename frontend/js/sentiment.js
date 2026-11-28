@@ -31,7 +31,7 @@ async function analyzeSentiment(text) {
         return {
             label: finalLabel,
             // حفظ اسم الموديل ونسبة الثقة لعرضها في تفاصيل الفيلم
-            method: `Logistic Regression (${data.confidence.toFixed(1)}% Confidence)`,
+            method: `SVM (${data.confidence.toFixed(1)}% Confidence)`,
             score: data.confidence
         };
 

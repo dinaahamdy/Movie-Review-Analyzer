@@ -1,0 +1,12 @@
+============================================================
+MODEL COMPARISON SUMMARY
+============================================================
+
+                    Accuracy  Precision  Recall      F1
+LinearSVC             0.8727     0.8685  0.8710  0.8698
+LogisticRegression    0.8696     0.8646  0.8690  0.8668
+GaussianNB            0.5761     0.5384  0.9220  0.6798
+RandomForest          0.8555     0.8412  0.8678  0.8543
+
+Best model by F1: LinearSVC
+Best model by Accuracy: LinearSVC

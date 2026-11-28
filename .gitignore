@@ -1,0 +1,12 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+.venv_*/
+venv/
+
+# Local backups
+local_changes.patch
+local_experiments_backup.zip
